@@ -15,7 +15,10 @@ def main():
     sim.initialize()
 
     print(f"\nDeployed {sim.num_nodes} nodes. Base station at {sim.base_station}")
-    print(f"Initial CH: Node {sim.current_ch.id} (Energy: {sim.current_ch.energy:.3f}J)\n")
+    print("Initial CHs:")
+    for ch in sim.current_chs:
+        print(f"  Node {ch.id} (Energy: {ch.energy:.3f}J)")
+    print("\n")
 
     max_rounds = 500
     rounds_run = sim.run_n_rounds(max_rounds)

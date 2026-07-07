@@ -8,7 +8,7 @@
 
 AgroTech Vision is a high-fidelity, production-grade simulation environment designed to model, visualize, and analyze energy-efficient **Wireless Sensor Networks (WSNs)** in smart agriculture.
 
-Originally a simple prototype, this system has been architecturally upgraded into a **True Multi-Cluster Architecture**. It uses machine learning (K-Means) for spatial partitioning and dynamic, algorithmic rotation of Cluster Heads (CHs) to maximize network lifetime. The entire engine is wrapped in a state-of-the-art, multi-page web application featuring custom Glassmorphism CSS, interactive telemetry, and real-time Plotly rendering.
+Originally a simple prototype, this system has been architecturally upgraded into a **True Multi-Cluster Architecture**. It uses machine learning (K-Means) for spatial partitioning and dynamic, algorithmic rotation of Cluster Heads (CHs) to maximize network lifetime. The entire engine is wrapped in a state-of-the-art, modular, multi-page web application featuring our bespoke **Scientific Light** design system.
 
 ---
 
@@ -52,10 +52,10 @@ This project was built entirely in Python, pushing standard libraries and framew
 *   **Pandas**: Aggregates time-series simulation data (Alive Nodes, Active CHs, Residual Energy) into dataframes for historical tracking.
 *   **Math & Random**: Handles euclidean distance calculations and stochastic node deployment.
 
-### Frontend & UI/UX
-*   **Streamlit**: The backbone of the web framework. Heavily modified using Session State (`st.session_state`) to bypass the default sidebar layout and create a true Multi-Page Application (SPA) flow (Landing → Setup → Loading → Dashboard).
-*   **Custom CSS (Glassmorphism)**: Raw CSS was injected to remove Streamlit "chrome" (headers/footers), enforce Google Fonts (`Space Grotesk` & `Inter`), and render floating frosted-glass cards with interactive hover-lift states and CSS-animated alert pulses.
-*   **Plotly Graph Objects (`plotly.graph_objects`)**: Powers the interactive "Live Topology Map" and "Network Trends" charts. Features distinct `Viridis` color mapping for separate clusters, physical line-drawing for packet routing, and locked-axis constraints to prevent accidental viewport distortion.
+### Frontend & UI/UX (Scientific Light Theme)
+*   **Streamlit**: The backbone of the web framework. Structured as a modular Single Page Application (SPA) utilizing `st.session_state` routing.
+*   **Custom CSS (Glassmorphism & Scientific Design)**: A custom `ui/style.css` stylesheet completely overrides Streamlit's default components, enforcing Google Fonts (`Space Grotesk` & `Inter`), and rendering clean, enterprise-grade white cards with subtle green (`#2E7D32`) and blue (`#2563EB`) accents. CSS is cached (`@st.cache_data`) for high performance.
+*   **Plotly Graph Objects (`plotly.graph_objects`)**: Powers the interactive "Live Topology Map", Node Inspector highlights, and detailed Analytics charts.
 
 ---
 
@@ -63,12 +63,22 @@ This project was built entirely in Python, pushing standard libraries and framew
 
 ```text
 mini project/
-├── app.py           # The Dashboard Controller. Manages routing, CSS injection, Plotly rendering, and the simulation UI state.
-├── simulation.py    # The Simulation Engine. Manages the event loop, triggers re-clustering, routes data payloads, and logs historical metrics.
-├── utils.py         # The Algorithmic Core. Houses the `cluster_nodes_and_select_chs` KMeans logic and node deployment functions.
-├── node.py          # The Entity Class. Defines `SensorNode` state, energy consumption physics, and CH scoring math.
-├── requirements.txt # Python package dependencies.
-└── README.md        # This documentation file.
+├── app.py                 # Clean SPA Router mapping to specific UI views.
+├── simulation.py          # The Simulation Engine (Event loop, Re-clustering, Routing).
+├── utils.py               # The Algorithmic Core (KMeans logic, deployment functions).
+├── node.py                # The Entity Class (SensorNode state, energy physics).
+├── main.py                # CLI entry point for headless debugging/testing.
+├── requirements.txt       # Python package dependencies.
+├── README.md              # Project documentation.
+└── ui/                    # Dedicated Frontend Module
+    ├── style.css          # Scientific Light CSS design tokens and variables.
+    ├── components.py      # Reusable UI elements (Navbar, Metric Cards, Plotly Theming).
+    └── views/             # Individual Screen Logic
+        ├── landing.py     # Home / Introduction View.
+        ├── setup.py       # Configuration forms for simulation parameters.
+        ├── loading.py     # Network instantiation and provisioning sequence.
+        ├── dashboard.py   # Main NOC (Live Topology, Controls, Analytics).
+        └── inspector.py   # Deep-dive Node Telemetry View.
 ```
 
 ---
@@ -99,21 +109,19 @@ The application will automatically open in your default browser at `http://local
 
 ## 🎮 Platform Walkthrough
 
-1.  **Landing Portal**: Welcome screen. Click *Initialize Environment Setup*.
-2.  **Simulation Parameters**: You will be presented with an industrial configuration screen. Use the number inputs to precisely define:
-    *   *Total Nodes* & *Comm Range* (Topology constraints).
-    *   *CH Energy Threshold* (Rotation aggressiveness).
-    *   *Selection Algorithm Weights* ($w1, w2, w3$).
-3.  **Network Operations Center (NOC)**: 
-    *   **Live Topology Map**: Watch clusters form dynamically. Standard nodes (colored by cluster) are linked to their local CH (Diamond marker), which links to the Base Station.
-    *   **Simulation Controls**: Use `Step Forward (1)` to carefully observe data transmission, or `Fast Forward (10)` to watch the network rapidly deplete and dynamically re-cluster.
-    *   **Node Introspection**: Select any specific node ID from the dropdown at the bottom of the dashboard to pull up its exact telemetry (Identity, Role, Residual Energy, and Topology Data).
+1.  **Landing Portal**: Welcome screen. Click *Initialize Simulation*.
+2.  **Simulation Parameters**: You will be presented with a clean, industrial configuration screen. Use the inputs to define Topology constraints, Thresholds, and Algorithm Weights ($w1, w2, w3$).
+3.  **Loading Screen**: Watch the system securely deploy nodes, compute graphs, and elect clusters in the background.
+4.  **Network Operations Center (NOC)**: 
+    *   **Live Topology Map**: Watch clusters form dynamically. Normal nodes are linked to their local CH (Diamond marker), which links to the Base Station.
+    *   **Simulation Controls**: Use `Step Forward (1)` or `Auto-Run` to observe data transmission, energy consumption, and dynamic re-clustering.
+5.  **Node Inspector**: Dedicated view to select any specific node ID to pull up its exact live telemetry, activity logs, and a focused topology highlight.
 
 ---
 
-## 📚 Academic Context
+## 📚 Academic & Portfolio Context
 
-This implementation fully satisfies modern WSN academic requirements:
+This implementation fully satisfies modern WSN academic requirements and serves as a stellar software engineering portfolio piece:
 *   **Scalable Architecture**: Dynamic K-Means clustering prevents bottlenecks.
-*   **Balanced Energy Distribution**: Algorithmic CH rotation prevents aggregation nodes from dying prematurely.
-*   **Realistic Constraints**: Dead nodes are completely purged from topology calculations, and transmissions physically scale with squared distance.
+*   **MVC Modularity**: Frontend completely decoupled from backend physics.
+*   **Production Quality UI**: Custom CSS bridges the gap between rapid prototyping (Streamlit) and premium SaaS aesthetics.

@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Base Reset & Hide Streamlit Chrome */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header { visibility: hidden; }
+
+/* Variables based on Scientific Light Design System */
+:root {
+    --bg-color: #F8FAF5;
+    --surface-color: #FFFFFF;
+    --primary-green: #2E7D32;
+    --primary-green-hover: #1B5E20;
+    --secondary-green: #66BB6A;
+    --accent-blue: #2563EB;
+    --success: #16A34A;
+    --warning: #F59E0B;
+    --danger: #DC2626;
+    --border-color: #E5E7EB;
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --border-radius: 6px;
+    --spacing-base: 24px;
+}
+
+/* Global Typography & Background */
+.stApp {
+    background-color: var(--bg-color) !important;
+}
+
+/* Max Width Constraint & Padding Reduction */
+.block-container {
+    max-width: 1280px !important;
+    padding-top: 1.5rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+    margin: 0 auto;
+}
+
+html, body, p {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading) !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Global No Scroll Utility */
+.no-scroll { overflow: hidden !important; }
+.no-scroll ::-webkit-scrollbar { display: none; }
+
+/* Cards & Surfaces */
+.sci-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sci-card-compact {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1rem;
+}
+
+
+
+/* Buttons Foundation */
+.stButton > button {
+    border-radius: var(--border-radius) !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    padding: 0.5rem 1rem !important;
+}
+
+/* Primary Button (Scientific Green) */
+.stButton > button[kind="primary"] {
+    background-color: var(--primary-green) !important;
+    color: white !important;
+    border: 1px solid var(--primary-green) !important;
+}
+.stButton > button[kind="primary"]:hover {
+    background-color: var(--primary-green-hover) !important;
+    border-color: var(--primary-green-hover) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2) !important;
+}
+
+/* Secondary Button */
+.stButton > button[kind="secondary"] {
+    background-color: var(--surface-color) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.stButton > button[kind="secondary"]:hover {
+    border-color: var(--text-secondary) !important;
+    background-color: var(--bg-color) !important;
+}
+
+/* Disabled State */
+.stButton > button:disabled {
+    background-color: #F3F4F6 !important;
+    color: #9CA3AF !important;
+    border: 1px solid #E5E7EB !important;
+    cursor: not-allowed !important;
+}
+
+/* Navigation System */
+.nav-btn > button {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important;
+    border-bottom: 2px solid transparent !important;
+}
+.nav-btn > button:hover {
+    color: var(--primary-green) !important;
+    background: rgba(46, 125, 50, 0.05) !important;
+}
+.nav-btn-active > button {
+    color: var(--primary-green) !important;
+    border-bottom: 2px solid var(--primary-green) !important;
+    background: transparent !important;
+}
+
+/* Log Panel */
+.log-panel-container {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    height: 180px;
+    overflow-y: auto;
+    color: var(--text-secondary);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Ensure Tooltip Icons are explicitly visible */
+[data-testid="stTooltipIcon"] {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 0.7 !important;
+    color: var(--primary-green) !important;
+}
+[data-testid="stTooltipIcon"]:hover {
+    opacity: 1 !important;
+}
+
+/* Custom Bulletproof Tooltip */
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+

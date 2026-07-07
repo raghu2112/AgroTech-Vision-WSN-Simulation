@@ -11,15 +11,18 @@ class WSNSimulation:
     """Main simulation controller for the WSN network."""
 
     def __init__(self, num_nodes: int = 30, field_size: tuple = (100, 100),
-                 base_station: tuple = (50, 110), energy_threshold: float = 0.3,
+                 base_station: tuple = None, energy_threshold: float = 0.3,
                  comm_range: float = 30.0, w1: float = 0.5, w2: float = 0.3,
-                 w3: float = 0.2):
+                 w3: float = 0.2, rotation_interval: int = 5, auto_recluster: bool = True):
         self.num_nodes = num_nodes
         self.field_w, self.field_h = field_size
-        self.base_station = base_station
+        # Place base station at center-x, 10% above the field top
+        self.base_station = base_station if base_station else (self.field_w / 2, self.field_h * 1.1)
         self.energy_threshold = energy_threshold
         self.comm_range = comm_range
         self.w1, self.w2, self.w3 = w1, w2, w3
+        self.rotation_interval = rotation_interval
+        self.auto_recluster = auto_recluster
 
         # State
         self.nodes = []
@@ -33,6 +36,8 @@ class WSNSimulation:
         self.energy_history = []  # Total network energy per round
         self.ch_count_history = []      # Number of CHs per round
         self.dead_history = []
+        self.energy_var_history = []    # Variance of alive node energies
+        self.packets_history = []       # Cumulative data packets sent
 
     def initialize(self):
         """Deploy nodes and select initial CHs."""
@@ -43,6 +48,8 @@ class WSNSimulation:
         self.energy_history = []
         self.ch_count_history = []
         self.dead_history = []
+        self.energy_var_history = []
+        self.packets_history = []
 
         compute_neighbors(self.nodes, self.comm_range)
         self.current_chs = cluster_nodes_and_select_chs(
@@ -66,8 +73,8 @@ class WSNSimulation:
         self.round_num += 1
 
         # --- Dynamic CH Rotation & Re-clustering ---
-        # Re-cluster every 5 rounds OR if any CH is dead/below energy threshold
-        needs_rotation = (self.round_num % 5 == 0)
+        # Re-cluster every N rounds (if auto_recluster enabled) OR if any CH is dead/below energy threshold
+        needs_rotation = self.auto_recluster and (self.round_num % self.rotation_interval == 0)
         ch_failing = any(ch.energy < self.energy_threshold or not ch.is_alive for ch in self.current_chs)
 
         if not self.current_chs or needs_rotation or ch_failing:
@@ -81,6 +88,8 @@ class WSNSimulation:
                 self.is_running = False
                 return False
             self._log(f">> Re-clustered network into {len(self.current_chs)} clusters.")
+            for ch in self.current_chs:
+                self._log(f"[ROLE] Node {ch.id} elected as Cluster Head")
 
         # --- Data transmission phase (Local cluster communication) ---
         members = [n for n in alive if not n.is_ch]
@@ -144,6 +153,17 @@ class WSNSimulation:
         self.ch_count_history.append(len(self.current_chs))
         dead_ids = [n.id for n in self.nodes if not n.is_alive]
         self.dead_history.append(dead_ids)
+        
+        # Energy variance
+        if alive:
+            mean_e = sum(n.energy for n in alive) / len(alive)
+            var_e = sum((n.energy - mean_e)**2 for n in alive) / len(alive)
+        else:
+            var_e = 0.0
+        self.energy_var_history.append(var_e)
+        
+        # Cumulative packets
+        self.packets_history.append(sum(n.data_sent for n in self.nodes))
 
     def _log(self, msg: str):
         entry = format_log(self.round_num, msg)
